@@ -1,7 +1,10 @@
 require("dotenv").config();
 
 const express = require("express");
-const app = express();
+var cors = require("cors");
+var app = express();
+
+app.use(cors());
 const mongoose = require("mongoose");
 
 mongoose.connect(process.env.DATABASE_URL, {
@@ -14,7 +17,7 @@ db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Database"));
 
 app.use(express.json());
-const subscribersRouter = require("./routes/subscribers");
-app.use("/subscribers", subscribersRouter);
+const listRouter = require("./routes/list");
+app.use("/list", listRouter);
 
 app.listen(4000, () => console.log("its alive!!!"));
