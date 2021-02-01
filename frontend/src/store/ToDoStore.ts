@@ -1,4 +1,5 @@
 import { action, makeAutoObservable } from "mobx";
+import { updateTasks } from "../api/lists";
 
 export class ToDoStore {
   toDoLists: ToDoList[] = [];
@@ -7,6 +8,9 @@ export class ToDoStore {
     _id: "",
     tasks: [],
   };
+
+  isCorrectPassword: boolean = true;
+  isCorrectLogin: boolean = true;
 
   constructor() {
     makeAutoObservable(this);
@@ -19,6 +23,15 @@ export class ToDoStore {
   @action setCurrentToDoList(currentToDoList: ToDoList) {
     this.currentToDoList = currentToDoList;
   }
+
+  @action changeToDone = (item: Task) => {
+    const newArr = [...toDoStore.currentToDoList.tasks];
+    let elementsIndex = toDoStore.currentToDoList.tasks.findIndex(
+      (element) => element._id === item._id
+    );
+    newArr[elementsIndex].isDone = true;
+    updateTasks(newArr);
+  };
 }
 
 const toDoStore = new ToDoStore();

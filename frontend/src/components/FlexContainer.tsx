@@ -12,8 +12,9 @@ const Container = styled.div`
 interface IFlexContainer {
   children: React.ReactNode;
 }
-const FlexContainer = ({ children }: IFlexContainer) => {
-  return <Container>{children}</Container>;
-};
+
+const FlexContainer = ({ children }: IFlexContainer) => (
+  <Container>{children}</Container>
+);
 
 export default FlexContainer;

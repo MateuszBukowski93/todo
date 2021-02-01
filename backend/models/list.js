@@ -9,11 +9,6 @@ const listSchema = new mongoose.Schema({
     type: Array,
     required: false,
   },
-  createDate: {
-    type: Date,
-    required: true,
-    default: Date.now,
-  },
 });
 
 module.exports = mongoose.model("List", listSchema);

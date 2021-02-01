@@ -1,16 +1,17 @@
 import toDoStore from "../store/ToDoStore";
+import { apiList as api } from "./constans";
 
-var myHeaders = new Headers();
+const myHeaders = new Headers();
 myHeaders.append("Content-Type", "application/json");
 
-export async function getAllList() {
-  const response = await fetch("http://localhost:4000/list");
-  const list = await response.json();
-  return list;
+export async function getAllLists() {
+  const response = await fetch(api);
+  const allLists = await response.json();
+  toDoStore.setToDoLists(allLists);
 }
 
 export async function addList(name: string) {
-  const response = await fetch("http://localhost:4000/list", {
+  await fetch(api, {
     method: "POST",
     headers: myHeaders,
     body: JSON.stringify({ name: name, tasks: [] }),
@@ -18,20 +19,35 @@ export async function addList(name: string) {
 }
 
 export async function deleteList(id: string) {
-  const response = await fetch(`http://localhost:4000/list/${id}`, {
+  await fetch(`${api}/${id}`, {
     method: "DELETE",
     headers: myHeaders,
   });
-
-  console.log(`deleted ${id}`);
 }
 
 export async function updateList(task: Task) {
-  console.log(toDoStore.currentToDoList);
   const { _id, tasks, name } = toDoStore.currentToDoList;
-  const response = await fetch(`http://localhost:4000/list/${_id}`, {
+  await fetch(`${api}/${_id}`, {
     method: "PATCH",
     headers: myHeaders,
     body: JSON.stringify({ name: name, _id: _id, tasks: [task, ...tasks] }),
   });
+}
+
+export async function updateTasks(tasks: Task[]) {
+  const { _id, name } = toDoStore.currentToDoList;
+  await fetch(`${api}/${_id}`, {
+    method: "PATCH",
+    headers: myHeaders,
+    body: JSON.stringify({ name: name, _id: _id, tasks: tasks }),
+  });
+}
+
+export async function getCurrentList(id: string) {
+  const response = await fetch(`${api}/${id}`, {
+    method: "GET",
+    headers: myHeaders,
+  });
+  const list = await response.json();
+  toDoStore.setCurrentToDoList(list);
 }

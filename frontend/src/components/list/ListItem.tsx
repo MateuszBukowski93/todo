@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { navigate } from "@reach/router";
 import Button from "../Button";
 import constants from "../../constants";
-import { deleteList, updateList } from "../../api/lists";
+import { deleteList, getAllLists } from "../../api/lists";
 import toDoStore from "../../store/ToDoStore";
 
 const Item = styled.li<{ isToDo?: boolean; isDone: boolean }>`
@@ -17,16 +17,18 @@ const Item = styled.li<{ isToDo?: boolean; isDone: boolean }>`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  cursor: ${({ isToDo }) => (isToDo ? "initial" : "pointer")};
-  transition: ${({ isToDo }) => !isToDo && "background-color 200ms ease-in"};
+  transition: "background-color 200ms ease-in";
   &:hover {
-    background-color: ${({ theme, isToDo }) =>
-      !isToDo && theme.colors.primaryLight};
+    background-color: ${({ theme }) => theme.colors.gray};
   }
 `;
-
+const Done = styled.span`
+  font-weight: 900;
+  text-transform: uppercase;
+  margin: 0 10px;
+`;
 const SuccessButton = styled(Button)`
-  padding: 5px;
+  padding: 10px;
   margin: 0 5px;
   &:hover {
     background-color: ${({ theme }) => theme.colors.green};
@@ -47,41 +49,38 @@ interface IListItem {
   isToDo?: boolean;
 }
 
-const ListItem = ({ item, isToDo }: IListItem) => {
-  return (
-    <Item
-      onClick={() => {
-        toDoStore.setCurrentToDoList(item);
-        navigate(`/todolist/${item.name}}`);
-      }}
-      isToDo={isToDo}
-      isDone={item.isDone}
-    >
-      <span>{item.name}</span>
-      <div>
-        {isToDo && !item.isDone && (
+const ListItem = ({ item, isToDo }: IListItem) => (
+  <Item isToDo={isToDo} isDone={item.isDone}>
+    <span>{item.name}</span>
+    <div style={{ zIndex: 100 }}>
+      {isToDo && !item.isDone && (
+        <SuccessButton
+          text={constants.DONE}
+          onClick={() => {
+            toDoStore.changeToDone(item);
+          }}
+        />
+      )}
+      {isToDo && item.isDone && <Done>{constants.DONE}</Done>}
+      {!isToDo && (
+        <>
           <SuccessButton
-            text={constants.DONE}
-            // @ts-ignore
-            onClick={(event) => {
-              event.stopPropagation();
-              updateList(item._id);
+            text={constants.CHECKTASKS}
+            onClick={() => {
+              toDoStore.setCurrentToDoList(item);
+              navigate(`/todolist/${item.name}}`);
             }}
           />
-        )}
-        {!isToDo && (
           <DeleteButton
             text={constants.DELETE}
-            // @ts-ignore
-            onClick={(event) => {
-              event.stopPropagation();
-              deleteList(item._id);
+            onClick={() => {
+              deleteList(item._id).then(() => getAllLists());
             }}
           />
-        )}
-      </div>
-    </Item>
-  );
-};
+        </>
+      )}
+    </div>
+  </Item>
+);
 
 export default ListItem;

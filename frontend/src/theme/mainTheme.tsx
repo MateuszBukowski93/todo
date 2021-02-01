@@ -8,7 +8,7 @@ export const mainTheme: DefaultTheme = {
     gray: "#BBC4C9",
     grayLight: "#E8EBED",
     white: "#ffffff",
-    red: "#C30F09",
+    red: "#E61D0F",
     green: "#03A032",
   },
   fontSize: {

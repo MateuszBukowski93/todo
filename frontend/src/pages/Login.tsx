@@ -5,12 +5,10 @@ import Form from "../components/Form";
 interface ILogin {
   path: string;
 }
-const Login = ({ path }: ILogin) => {
-  return (
-    <Layout>
-      <Form />
-    </Layout>
-  );
-};
+const Login = ({ path }: ILogin) => (
+  <Layout>
+    <Form />
+  </Layout>
+);
 
 export default Login;

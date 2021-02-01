@@ -1,8 +1,8 @@
 require("dotenv").config();
 
 const express = require("express");
-var cors = require("cors");
-var app = express();
+const cors = require("cors");
+const app = express();
 
 app.use(cors());
 const mongoose = require("mongoose");
@@ -17,7 +17,11 @@ db.on("error", (error) => console.log(error));
 db.once("open", () => console.log("Connected to Database"));
 
 app.use(express.json());
-const listRouter = require("./routes/list");
-app.use("/list", listRouter);
 
-app.listen(4000, () => console.log("its alive!!!"));
+const listRouter = require("./routes/list");
+const userRouter = require("./routes/user");
+
+app.use("/list", listRouter);
+app.use("/user", userRouter);
+
+app.listen(4000);

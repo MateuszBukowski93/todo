@@ -31,15 +31,13 @@ const StyledButton = styled.button<{ disabled?: boolean }>`
 interface IButton {
   text: string;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick: () => void;
 }
 
-const Button = ({ text, onClick, disabled, ...otherProps }: IButton) => {
-  return (
-    <StyledButton onClick={onClick} disabled={disabled} {...otherProps}>
-      {text}
-    </StyledButton>
-  );
-};
+const Button = ({ text, onClick, disabled, ...otherProps }: IButton) => (
+  <StyledButton onClick={onClick} disabled={disabled} {...otherProps}>
+    {text}
+  </StyledButton>
+);
 
 export default Button;
